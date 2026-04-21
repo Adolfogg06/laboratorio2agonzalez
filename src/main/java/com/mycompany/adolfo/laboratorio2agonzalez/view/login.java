@@ -9,6 +9,7 @@ import java.awt.Image;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import com.mycompany.adolfo.laboratorio2agonzalez.view.Principal;
+import com.mycompany.adolfo.controller.UserController;
 
 /**
  *
@@ -18,9 +19,9 @@ public class login extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(login.class.getName());
     
-    /**
-     * Creates new form login
-     */
+    UserController userCont = new UserController();
+    String txtField1;
+    String txtField2;
     public login() {
         initComponents();
         jButton2.setBorderPainted(false); 
@@ -162,10 +163,15 @@ public class login extends javax.swing.JFrame {
     private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField2ActionPerformed
-
+        
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        Principal p = new Principal();
-        p.setVisible(true);
+        
+        txtField2 = jTextField1.getText();
+        txtField1 = jTextField2.getText();
+        
+        userCont.validarYAutenticar(txtField1, txtField2);
+        
+        
     }//GEN-LAST:event_jButton2ActionPerformed
 
     /**
