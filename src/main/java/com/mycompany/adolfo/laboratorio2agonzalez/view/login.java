@@ -10,6 +10,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import com.mycompany.adolfo.laboratorio2agonzalez.view.Principal;
 import com.mycompany.adolfo.controller.UserController;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -19,7 +20,7 @@ public class login extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(login.class.getName());
     
-    UserController userCont = new UserController();
+    UserController controller = new UserController();
     String txtField1;
     String txtField2;
     public login() {
@@ -166,10 +167,31 @@ public class login extends javax.swing.JFrame {
         
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         
-        txtField2 = jTextField1.getText();
-        txtField1 = jTextField2.getText();
-        
-        userCont.validarYAutenticar(txtField1, txtField2);
+        String email = jTextField2.getText();
+        String pass = jTextField1.getText(); 
+
+        // Llamamos al controlador
+        String resultado = controller.validarYAutenticar(email, pass);
+
+        if (resultado.equals("EXITO")) {
+            JOptionPane.showMessageDialog(this, "LoGIN Correcto!!");
+            this.dispose();
+            Principal prc = new Principal();
+            prc.setVisible(true); // Abre el principal
+        } 
+        else if (resultado.equals("BLOQUEADO")) {
+            JOptionPane.showMessageDialog(this, "Sistema bloqueado por seguridad.", "Error", JOptionPane.ERROR_MESSAGE);
+            jButton2.setEnabled(false); // Desactiva el botón
+        } 
+        else if (resultado.equals("EMAIL_INVALIDO")) {
+            JOptionPane.showMessageDialog(this, "Correo no válido.", "Atención", JOptionPane.WARNING_MESSAGE);
+        } 
+        else if (resultado.equals("PASSWORD_CORTO")) {
+            JOptionPane.showMessageDialog(this, "La contraseña es muy corta.", "Atención", JOptionPane.WARNING_MESSAGE);
+        } 
+        else if (resultado.equals("INCORRECTO")) {
+            JOptionPane.showMessageDialog(this, "Credenciales incorrectas. Intentos restantes: " + controller.getIntentosRestantes());
+    }
         
         
     }//GEN-LAST:event_jButton2ActionPerformed
