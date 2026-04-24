@@ -1,8 +1,6 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
+
 package com.mycompany.adolfo.laboratorio2agonzalez.view;
+
 import com.mycompany.adolfo.controller.UserController;
 import com.mycompany.adolfo.laboratorio2agonzalez.view.login;
 import com.mycompany.adolfo.model.User;
@@ -14,7 +12,7 @@ import javax.swing.JOptionPane;
 public class Principal extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Principal.class.getName());
-    private UserController controller = new UserController();
+    private UserController controller = UserController.getInstance();
     private String modoActual = "Agregar";
     /**
      * Creates new form Principal
@@ -30,10 +28,53 @@ public class Principal extends javax.swing.JFrame {
 
         // LÓGICA DE ROLES: Solo el Admin ve la tabla
         if (rolRecibido == null || !rolRecibido.equalsIgnoreCase("Admin")) {
+
+            
+            // Botones
+            jButton1.setVisible(false);
+            jButton2.setVisible(false);
+            // Nota: jButton3 (Log Out) NO lo ocultamos para que puedan salir.
+
+            // Etiquetas
+            //jLabel1.setVisible(false);
+            jLabel2.setVisible(false);
+            jLabel3.setVisible(false);
+            jLabel4.setVisible(false);
+            jLabel5.setVisible(false);
+            jLabel6.setVisible(false);
+
+            // Menús y Barras
+            jMenu1.setVisible(false);
+            jMenu2.setVisible(false);
+            jMenu3.setVisible(false);
+            jMenu4.setVisible(false);
+            jMenuBar1.setVisible(false);
+            jMenuBar2.setVisible(false);
+
+            // Items de Menú
+            jMenuItem1.setVisible(false);
+            jMenuItem2.setVisible(false);
+            jMenuItem3.setVisible(false);
+            jMenuItem4.setVisible(false);
+            jMenuItem5.setVisible(false);
+            jMenuItem6.setVisible(false);
+
+            // Contenedores y Tablas
+            //jPanel1.setVisible(false);
+            jPopupMenu1.setVisible(false);
             jScrollPane1.setVisible(false);
             jTable1.setVisible(false);
-            jMenuItem6.setEnabled(false); // Deshabilitar "Ver Usuarios"
+
+            // Campos de Texto
+            jTextField1.setVisible(false);
+            jTextField2.setVisible(false);
+            jTextField3.setVisible(false);
+            jTextField4.setVisible(false);
+            
+            
         } else {
+            
+        
             // Si es Admin, cargamos los datos
             actualizarTabla();
     }
@@ -83,23 +124,22 @@ public class Principal extends javax.swing.JFrame {
                 break;
 
             case "Eliminar":
-        String emailAEliminar = jTextField2.getText(); // El usuario que buscamos arriba
-        if (emailAEliminar.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Primero busca un usuario para inactivar.");
-            return;
-        }
+                // Usamos el texto de jTextField2 que es donde buscamos al usuario
+                String emailAEliminar = jTextField2.getText(); 
 
-        int confirmacion = JOptionPane.showConfirmDialog(this, 
-                "¿Seguro que desea inactivar al usuario " + emailAEliminar + "?", 
-                "Confirmar Inactivación", JOptionPane.YES_NO_OPTION);
+                if (emailAEliminar.isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "Busca un usuario primero.");
+                    return;
+                }
 
-        if (confirmacion == JOptionPane.YES_OPTION) {
-            // Cambiamos el estado a false (Inactivo)
-            controller.setEstadoUsuario(emailAEliminar, false); 
-            JOptionPane.showMessageDialog(this, "Usuario inactivado correctamente.");
-            limpiarCampos();
-        }
-        break;
+                int conf = JOptionPane.showConfirmDialog(this, "¿Inactivar a " + emailAEliminar + "?");
+                if (conf == JOptionPane.YES_OPTION) {
+                    controller.setEstadoUsuario(emailAEliminar, false); // Cambia a inactivo
+                    JOptionPane.showMessageDialog(this, "Usuario Inactivado");
+                    actualizarTabla(); // REFRESCAR LA TABLA
+                    limpiarCampos();
+                }
+                break;
         }
     }
 
@@ -149,8 +189,6 @@ public class Principal extends javax.swing.JFrame {
         jMenuItem4 = new javax.swing.JMenuItem();
         jMenuItem6 = new javax.swing.JMenuItem();
         jMenuItem5 = new javax.swing.JMenuItem();
-        jMenu5 = new javax.swing.JMenu();
-        jMenuItem7 = new javax.swing.JMenuItem();
 
         jMenuItem1.setText("jMenuItem1");
 
@@ -314,14 +352,6 @@ public class Principal extends javax.swing.JFrame {
 
         jMenuBar1.add(jMenu3);
 
-        jMenu5.setText("Reinicio de Clave");
-
-        jMenuItem7.setText("Reiniciar");
-        jMenuItem7.addActionListener(this::jMenuItem7ActionPerformed);
-        jMenu5.add(jMenuItem7);
-
-        jMenuBar1.add(jMenu5);
-
         setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -358,23 +388,20 @@ public class Principal extends javax.swing.JFrame {
         modoActual = "Agregar";
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
-    private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jMenuItem7ActionPerformed
-
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        String nombre = jTextField1.getText(); // AHORA ES EL NOMBRE
-        String email = jTextField3.getText();
+        String nombre = jTextField1.getText(); 
+        String emailForm = jTextField3.getText(); // Email en el campo de edición
         String pass = jTextField4.getText();
         String role = jComboBox1.getSelectedItem().toString();
+        String emailOriginal = jTextField2.getText(); // El email usado en "Buscar"
 
-        // Validaciones básicas
+        // Validaciones para Agregar y Actualizar
         if (modoActual.equals("Agregar") || modoActual.equals("Actualizar")) {
-            if (nombre.isEmpty() || email.isEmpty() || pass.isEmpty()) {
+            if (nombre.isEmpty() || emailForm.isEmpty() || pass.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Todos los campos son obligatorios.");
                 return;
             }
@@ -386,25 +413,34 @@ public class Principal extends javax.swing.JFrame {
 
         switch (modoActual) {
             case "Agregar":
-                // Pasamos el nombre al controlador
-                controller.agregarUsuario(nombre, email, pass, role);
+                controller.agregarUsuario(nombre, emailForm, pass, role);
                 JOptionPane.showMessageDialog(this, "¡Usuario " + nombre + " agregado!");
-                limpiarCampos();
                 break;
 
             case "Actualizar":
-                String emailOriginal = jTextField2.getText();
-                // Actualizamos los datos (necesitarás agregar el nombre en el método del controlador)
-                controller.modificarUsuario(nombre, emailOriginal, pass, role); 
-                // Si quieres actualizar el nombre también, deberás modificar el método modificarUsuario en el Controller
+                if (emailOriginal.isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "Busca un usuario primero.");
+                    return;
+                }
+                controller.modificarUsuario(nombre, emailOriginal, pass, role);
                 JOptionPane.showMessageDialog(this, "Datos actualizados.");
                 break;
 
             case "Eliminar":
-                // Lógica de inactivar...
+                if (emailOriginal.isEmpty()) {
+                    JOptionPane.showMessageDialog(this, "Busca un usuario primero.");
+                    return;
+                }
+                int respuesta = JOptionPane.showConfirmDialog(this, "¿Inactivar a " + emailOriginal + "?");
+                if (respuesta == JOptionPane.YES_OPTION) {
+                    controller.setEstadoUsuario(emailOriginal, false); // CAMBIO A INACTIVO
+                    JOptionPane.showMessageDialog(this, "Usuario Inactivado.");
+                }
                 break;
         }
-        actualizarTabla();
+
+        actualizarTabla(); // REFRESCAR SIEMPRE LA TABLA
+        limpiarCampos();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
@@ -414,22 +450,21 @@ public class Principal extends javax.swing.JFrame {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         String correoABuscar = jTextField2.getText();
-        User encontrado = null;
-
-        for (User u : controller.getUsuarios()) {
-            if (u.getEmail().equals(correoABuscar)) {
-                encontrado = u;
-                break;
-            }
-        }
+    
+        // Usamos el método buscarUsuario que creamos en el controlador
+        User encontrado = controller.buscarUsuario(correoABuscar);
 
         if (encontrado != null) {
-            jTextField1.setText(encontrado.getNombre()); // Mostramos el nombre aquí
+            jTextField1.setText(encontrado.getNombre());
             jTextField3.setText(encontrado.getEmail());
             jTextField4.setText(encontrado.getPassword());
             jComboBox1.setSelectedItem(encontrado.getRole());
+
+            if (!encontrado.isActivo()) {
+                JOptionPane.showMessageDialog(this, "Nota: El usuario seleccionado está INACTIVO.");
+            }
         } else {
-            JOptionPane.showMessageDialog(this, "Usuario no encontrado.");
+            JOptionPane.showMessageDialog(this, "Usuario no encontrado en el sistema.");
         }
     
     }//GEN-LAST:event_jButton2ActionPerformed
@@ -494,7 +529,6 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenu4;
-    private javax.swing.JMenu jMenu5;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuBar jMenuBar2;
     private javax.swing.JMenuItem jMenuItem1;
@@ -503,7 +537,6 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JMenuItem jMenuItem6;
-    private javax.swing.JMenuItem jMenuItem7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JScrollPane jScrollPane1;

@@ -20,19 +20,58 @@ public class login extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(login.class.getName());
     
-    UserController controller = new UserController();
+    private UserController controller = UserController.getInstance();
     
     String txtField1;
     String txtField2;
     public login() {
+        
         initComponents();
+        configurarPlaceholders();
         jButton2.setBorderPainted(false); 
         jButton2.setFocusPainted(false);
         jButton2.setContentAreaFilled(false); // Importante para que no se pinte el fondo cuadrado
-
         // 2. Usar un método para pintar el fondo redondeado (sobrescribiendo paintComponent)
         // Opcionalmente, para que sea rápido, usaremos un borde con radio
         //jButton2.setBorder(new RoundedBorder(20, Color.WHITE)); // 20 es el radio
+    }
+    
+    private void configurarPlaceholders() {
+        // --- Lógica para el campo de Usuario (jTextField2) ---
+        jTextField2.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                if (jTextField2.getText().equals("user")) {
+                    jTextField2.setText("");
+                    jTextField2.setForeground(Color.BLACK);
+                }
+            }
+            @Override
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                if (jTextField2.getText().isEmpty()) {
+                    jTextField2.setText("user");
+                    jTextField2.setForeground(new Color(204, 204, 204));
+                }
+            }
+        });
+
+        // --- Lógica para el campo de Contraseña (jTextField1) ---
+        jTextField1.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                if (jTextField1.getText().equals("************")) {
+                    jTextField1.setText("");
+                    jTextField1.setForeground(Color.BLACK);
+                }
+            }
+            @Override
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                if (jTextField1.getText().isEmpty()) {
+                    jTextField1.setText("************");
+                    jTextField1.setForeground(new Color(204, 204, 204));
+                }
+            }
+        });
     }
 
     /**
@@ -50,8 +89,6 @@ public class login extends javax.swing.JFrame {
         jTextField1 = new javax.swing.JTextField();
         jTextField2 = new javax.swing.JTextField();
         jButton2 = new javax.swing.JButton();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
 
         jLabel1.setText("No tienes cuenta, crea una! Sign Up");
@@ -76,11 +113,6 @@ public class login extends javax.swing.JFrame {
         jButton2.setMargin(new java.awt.Insets(50, 50, 50, 50));
         jButton2.addActionListener(this::jButton2ActionPerformed);
 
-        jLabel2.setForeground(new java.awt.Color(0, 153, 255));
-        jLabel2.setText("Sign Up");
-
-        jLabel3.setText("No tienes cuenta, crea una!");
-
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(153, 153, 255));
         jLabel4.setText("Sign Up");
@@ -96,19 +128,10 @@ public class login extends javax.swing.JFrame {
                     .addComponent(jTextField2)
                     .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 288, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel2)
-                .addGap(245, 245, 245))
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(204, 204, 204)
                 .addComponent(jLabel4)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel3)
-                    .addGap(294, 294, 294)))
+                .addContainerGap(152, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -121,14 +144,7 @@ public class login extends javax.swing.JFrame {
                 .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                    .addContainerGap(372, Short.MAX_VALUE)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap()))
+                .addGap(39, 39, 39))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -137,7 +153,7 @@ public class login extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(97, 97, 97)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 424, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(112, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -230,8 +246,6 @@ public class login extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
