@@ -174,28 +174,30 @@ public class login extends javax.swing.JFrame {
         String email = jTextField2.getText();
         String pass = jTextField1.getText(); 
 
-        // Llamamos al controlador  
+        // El resultado ahora será "Admin", "Maestro", "user" o un error
         String resultado = controller.autenticar(email, pass);
 
-        if (resultado.equals("EXITO")) {
-            JOptionPane.showMessageDialog(this, "Login Correcto!!");
-            this.dispose();
-            Principal prc = new Principal();
-            prc.setVisible(true); // Abre el principal
+        // Verificamos si el resultado es alguno de los roles válidos
+        if (resultado.equals("Admin") || resultado.equals("user") || resultado.equals("maestro")) {
+            JOptionPane.showMessageDialog(this, "¡Bienvenido! Rol: " + resultado);
+
+            this.dispose(); // Cerramos el login
+
+            // IMPORTANTE: Pasamos el 'resultado' (que es el rol) al constructor
+            Principal prc = new Principal(resultado);
+            prc.setVisible(true); 
         } 
-        else if (resultado.equals("BLOQUEADO")) {
+        else if (resultado.equals("SISTEMA_BLOQUEADO")) {
             JOptionPane.showMessageDialog(this, "Sistema bloqueado por seguridad.", "Error", JOptionPane.ERROR_MESSAGE);
-            jButton2.setEnabled(false); // Desactiva el botón
+            jButton2.setEnabled(false);
         } 
-        else if (resultado.equals("EMAIL_INVALIDO")) {
-            JOptionPane.showMessageDialog(this, "Correo no válido.", "Atención", JOptionPane.WARNING_MESSAGE);
-        } 
-        else if (resultado.equals("PASSWORD_CORTO")) {
-            JOptionPane.showMessageDialog(this, "La contraseña es muy corta.", "Atención", JOptionPane.WARNING_MESSAGE);
-        } 
-        else if (resultado.equals("INCORRECTO")) {
-            //JOptionPane.showMessageDialog(this, "Credenciales incorrectas. Intentos restantes: " + controller.getIntentosRestantes());
-    }
+        else if (resultado.equals("USUARIO_INACTIVO")) {
+            JOptionPane.showMessageDialog(this, "Tu usuario está inactivo. Contacta al Admin.", "Atención", JOptionPane.WARNING_MESSAGE);
+        }
+        else {
+            // Para cualquier otro error (ERROR_CREDENCIALES)
+            JOptionPane.showMessageDialog(this, "Credenciales incorrectas.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
         
         
     }//GEN-LAST:event_jButton2ActionPerformed

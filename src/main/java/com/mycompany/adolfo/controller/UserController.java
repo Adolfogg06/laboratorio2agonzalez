@@ -11,10 +11,16 @@ public class UserController {
     private boolean bloqueado = false;
 
     public UserController() {
-        // Usuario inicial requerido para poder entrar
-        usuarios.add(new User("agonzalezg69@miumg.edu.gt", "AdolfGrego2026!", "Admin", true));
-        usuarios.add(new User("pedrinsky@miumg.edu.gt", "pdr2026@ppepe!", "user", true));
-        usuarios.add(new User("pdinklage@miumg.edu.gt", "pdin2123@umg!", "maestro", true));
+        // Añadimos el nombre como primer parámetro
+        usuarios.add(new User("Adolfo Gregorio", "agonzalezg69@miumg.edu.gt", "AdolfGrego2026!", "Admin", true));
+        usuarios.add(new User("Pedro", "pedrinsky@miumg.edu.gt", "pdr2026@ppepe!", "user", true));
+        usuarios.add(new User("Peter", "pdinklage@miumg.edu.gt", "pdin2123@umg!", "maestro", true));
+    }
+    public void reiniciarPassword(String email, String nuevaPass) {
+        User u = buscarUsuario(email);
+        if (u != null) {
+            u.setPassword(nuevaPass);
+        }
     }
 
     // --- CRITERIO: Validación de Contraseña Segura ---
@@ -23,8 +29,17 @@ public class UserController {
         String regex = "^(?=.*[A-Z])(?=.*[!@#$%^&*(),.?\":{}|<>]).{13,}$";
         return Pattern.matches(regex, pass);
     }
+    
+    public User buscarUsuario(String email) {
+        for (User u : usuarios) {
+            if (u.getEmail().equalsIgnoreCase(email)) {
+                return u;
+            }
+        }
+        return null; // Si no existe
+    }
 
-    // --- CRITERIO: Autenticación ---
+    // --- CRITERIO: Autenticación Mejorada ---
     public String autenticar(String email, String pass) {
         if (bloqueado) return "SISTEMA_BLOQUEADO";
 
@@ -32,7 +47,8 @@ public class UserController {
             if (u.getEmail().equals(email) && u.getPassword().equals(pass)) {
                 if (!u.isActivo()) return "USUARIO_INACTIVO";
                 intentos = 0;
-                return "EXITO";
+                // DEVOLVEMOS EL ROL: "Admin", "Maestro" o "User"
+                return u.getRole(); 
             }
         }
 
@@ -45,15 +61,18 @@ public class UserController {
     }
 
     // --- CRITERIO: Mantenimiento (CRUD) ---
-    public void agregarUsuario(String email, String pass, String rol) {
-        usuarios.add(new User(email, pass, rol, true));
+    public void agregarUsuario(String nombre, String email, String pass, String rol) {
+        usuarios.add(new User(nombre, email, pass, rol, true));
     }
 
-    public void modificarUsuario(String email, String nuevoPass, String nuevoRol) {
+    public void modificarUsuario(String nombre, String emailOriginal, String nuevoPass, String nuevoRol) {
         for (User u : usuarios) {
-            if (u.getEmail().equals(email)) {
+            // Buscamos por el email que el usuario NO cambió (el de la búsqueda)
+            if (u.getEmail().equalsIgnoreCase(emailOriginal)) {
+                u.setNombre(nombre);
                 u.setPassword(nuevoPass);
                 u.setRole(nuevoRol);
+                break; 
             }
         }
     }

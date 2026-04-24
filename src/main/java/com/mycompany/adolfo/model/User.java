@@ -1,13 +1,15 @@
 package com.mycompany.adolfo.model;
 
 public class User {
+    private String nombre;   // Nueva variable
     private String email;
     private String password;
-    private String role;     // Ejemplo: "Admin", "Operador"
-    private boolean activo;  // Para el requisito de "Inactivar usuarios"
+    private String role;     
+    private boolean activo;  
 
-    // Constructor completo
-    public User(String email, String password, String role, boolean activo) {
+    // Constructor actualizado con 'nombre'
+    public User(String nombre, String email, String password, String role, boolean activo) {
+        this.nombre = nombre;
         this.email = email;
         this.password = password;
         this.role = role;
@@ -15,8 +17,10 @@ public class User {
     }
 
     // --- Getters y Setters ---
-    // Los Setters son vitales para la parte de "Modificar" y "Reinicio de Clave"
-    
+
+    public String getNombre() { return nombre; }
+    public void setNombre(String nombre) { this.nombre = nombre; }
+
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
 
