@@ -21,6 +21,7 @@ public class login extends javax.swing.JFrame {
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(login.class.getName());
     
     UserController controller = new UserController();
+    
     String txtField1;
     String txtField2;
     public login() {

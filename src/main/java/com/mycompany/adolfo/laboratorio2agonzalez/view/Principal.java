@@ -15,6 +15,7 @@ public class Principal extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Principal.class.getName());
     private UserController controller = new UserController();
+    private String modoActual = "Agregar";
     /**
      * Creates new form Principal
      */
@@ -238,7 +239,7 @@ public class Principal extends javax.swing.JFrame {
         jMenuItem4.addActionListener(this::jMenuItem4ActionPerformed);
         jMenu3.add(jMenuItem4);
 
-        jMenuItem6.setText("Inactivar Usuario");
+        jMenuItem6.setText("Ver Usuarios");
         jMenuItem6.addActionListener(this::jMenuItem6ActionPerformed);
         jMenu3.add(jMenuItem6);
 
@@ -279,14 +280,17 @@ public class Principal extends javax.swing.JFrame {
 
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
         cambiarEstado("Eliminar");
+        modoActual = "Eliminar";
     }//GEN-LAST:event_jMenuItem4ActionPerformed
 
     private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
         cambiarEstado("Actualizar");
+        modoActual = "Actualizar";
     }//GEN-LAST:event_jMenuItem5ActionPerformed
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
         cambiarEstado("Agregar");
+        modoActual = "Agregar";
     }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
@@ -298,7 +302,50 @@ public class Principal extends javax.swing.JFrame {
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        String email = jTextField3.getText();
+        String pass = jTextField4.getText();
+        String confirm = jTextField1.getText();
+        String role = jComboBox1.getSelectedItem().toString();
+
+        // Validaciones básicas para Agregar y Actualizar
+        if (modoActual.equals("Agregar") || modoActual.equals("Actualizar")) {
+            if (email.isEmpty() || pass.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Correo y Contraseña son obligatorios.");
+                return;
+            }
+            if (!pass.equals(confirm)) {
+                JOptionPane.showMessageDialog(this, "Las contraseñas no coinciden.");
+                return;
+            }
+            if (!controller.esPasswordSegura(pass)) {
+                JOptionPane.showMessageDialog(this, "La clave debe tener 13 caracteres, una mayúscula y un signo especial.");
+                return;
+            }
+        }
+
+        // Ejecución según el modo
+        switch (modoActual) {
+            case "Agregar":
+                controller.agregarUsuario(email, pass, role);
+                JOptionPane.showMessageDialog(this, "Usuario agregado con éxito.");
+                limpiarCampos();
+                break;
+
+            case "Actualizar":
+                String emailOriginal = jTextField2.getText(); // El que buscamos
+                controller.modificarUsuario(emailOriginal, pass, role);
+                JOptionPane.showMessageDialog(this, "Usuario actualizado correctamente.");
+                break;
+
+            case "Eliminar":
+                // En tu controlador definimos 'setEstadoUsuario' para inactivar (borrado lógico)
+                int confirmacion = JOptionPane.showConfirmDialog(this, "¿Seguro que desea inactivar este usuario?");
+                if (confirmacion == JOptionPane.YES_OPTION) {
+                    controller.setEstadoUsuario(email, false);
+                    JOptionPane.showMessageDialog(this, "Usuario marcado como inactivo.");
+                }
+                break;
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
