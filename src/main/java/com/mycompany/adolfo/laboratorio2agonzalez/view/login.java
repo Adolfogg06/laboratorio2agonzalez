@@ -162,7 +162,10 @@ public class login extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
-        // TODO add your handling code here:
+        if (jTextField2.getText().equals("user")) {
+        jTextField2.setText("");
+        jTextField2.setForeground(Color.BLACK); // Cambia a color de texto normal
+    }
     }//GEN-LAST:event_jTextField2ActionPerformed
         
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -170,11 +173,11 @@ public class login extends javax.swing.JFrame {
         String email = jTextField2.getText();
         String pass = jTextField1.getText(); 
 
-        // Llamamos al controlador
-        String resultado = controller.validarYAutenticar(email, pass);
+        // Llamamos al controlador  
+        String resultado = controller.autenticar(email, pass);
 
         if (resultado.equals("EXITO")) {
-            JOptionPane.showMessageDialog(this, "LoGIN Correcto!!");
+            JOptionPane.showMessageDialog(this, "Login Correcto!!");
             this.dispose();
             Principal prc = new Principal();
             prc.setVisible(true); // Abre el principal
@@ -190,7 +193,7 @@ public class login extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "La contraseña es muy corta.", "Atención", JOptionPane.WARNING_MESSAGE);
         } 
         else if (resultado.equals("INCORRECTO")) {
-            JOptionPane.showMessageDialog(this, "Credenciales incorrectas. Intentos restantes: " + controller.getIntentosRestantes());
+            //JOptionPane.showMessageDialog(this, "Credenciales incorrectas. Intentos restantes: " + controller.getIntentosRestantes());
     }
         
         
